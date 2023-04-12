@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { Bezier2 } from "react-bootstrap-icons";
 
 export default function Home() {
     async function searchRoute() {
@@ -16,7 +15,7 @@ export default function Home() {
         });
         console.log(data);
     }
-    searchRoute();
+    //searchRoute();
     return (
         <>
             <Head>

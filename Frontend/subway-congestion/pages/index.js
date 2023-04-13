@@ -20,11 +20,40 @@ function callApi(addr) {
         });
 }
 
+function callRoute(route) {
+    let headers = new Headers({
+        "Content-Type": "application/json",
+    });
+    //console.log(route);
+    var url = "http://localhost:3000/api/congestion";
+    let options = {
+        headers: headers,
+        url: url,
+        method: "POST",
+        body: JSON.stringify(route),
+    };
+    return fetch(options.url, options)
+        .then((response) => {
+            return response;
+        })
+        .catch((error) => {
+            return Promise.reject(null);
+        });
+}
+
 export default function Home() {
     const [route, setRoute] = useState([]);
 
     useEffect(() => {
-        console.log(route);
+        if (route[0]) {
+            callRoute(route[0].route).then((res) => {
+                if (res) {
+                    res.json().then((json) => {
+                        console.log(json);
+                    });
+                }
+            });
+        }
     }, [route]);
 
     useEffect(() => {
@@ -45,7 +74,7 @@ export default function Home() {
     return (
         <main>
             {route.map((dat, key) => {
-                if (dat!=null) {
+                if (dat != null) {
                     return (
                         <div key={key}>
                             <div>{dat.fee}원</div>
@@ -56,12 +85,11 @@ export default function Home() {
                                     </div>
                                 );
                             })}
-                            <br/>
+                            <br />
                         </div>
                     );
-                }
-                else{
-                    return("")
+                } else {
+                    return "";
                 }
             })}
         </main>

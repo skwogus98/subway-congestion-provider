@@ -1,59 +1,38 @@
 import { resolve } from "styled-jsx/css";
-import RouteStation from "../json/RouteStation.json";
+import CongestionStation from "../json/CongestionStation.json";
 
-const serviceKey = "Uv%2FK1UoTGrRYC0Rih%2FYZCegc6QCLg1QoiZTnd37b5GbSXtFk3HX67IzRZzxSXBOoOPMbbegMlLrqpF2sGKvokw%3D%3D";
+const serviceKey = "4PSLEPOR1r96MsphjEEtF5lD7GT8Aj2c7GESt5Dm";
 
-export async function congestion(deptStationName, destStationName) {
-    deptStationName = "서울역";
-    destStationName = "한양대";
-    let dept = [];
-    let dest = [];
-    let routesJson = [];
-    for (let station of RouteStation) {
-        if (station.station_name == deptStationName) {
-            dept.push(station.station_code.length == 3 ? "0" + station.station_code : station.station_code);
-        } else if (station.station_name == destStationName) {
-            dest.push(station.station_code.length == 3 ? "0" + station.station_code : station.station_code);
+export async function congestion(stationName, stationNum, day, time, updnLine) {
+    stationName = stationName === "서울역" ? stationName : stationName + "역";
+    stationNum = stationNum + "호선";
+    day = "THU";
+    //time = 172000;
+    var stationCode = 0;
+    updnLine = 0;
+    var congestion = { congestion: 0 };
+    for (let station of CongestionStation) {
+        if (station.subwayLine === stationNum && station.stationName === stationName) {
+            stationCode = station.stationCode;
         }
     }
-    let promises = [];
-    for (let deptCode of dept) {
-        for (let destCode of dest) {
-            promises.push(
-                new Promise((resolve, reject) => {
-                    resolve(callRoute(deptCode, destCode));
-                }).then((json)=>{
-                    routesJson.push(json)
-                })
-            );
-        }
-    }
-    await Promise.all(promises).then(() => {
-        //console.log(routesJson);
+    await callCongestion(stationCode, day, parseInt(time / 10000)).then((res) => {
+        congestion.congestion = findCongestion(res, updnLine, time);
     });
-
-    return routesJson;
+    return congestion;
 }
 
-function callRoute(deptStationNum, destStationNum) {
+function callCongestion(stationCode, day, hour) {
     let headers = new Headers({
         "Content-Type": "application/json",
+        appkey: serviceKey,
     });
-    var url = "http://apis.data.go.kr/B553766/smt-path/path"; /*URL*/
-    var queryParams = "?" + encodeURIComponent("serviceKey") + "=" + serviceKey; /*Service Key*/
-    queryParams += "&" + encodeURIComponent("pageNo") + "=" + encodeURIComponent("1"); /**/
-    queryParams += "&" + encodeURIComponent("numOfRows") + "=" + encodeURIComponent("10"); /**/
-    queryParams += "&" + encodeURIComponent("dept_station_code") + "=" + encodeURIComponent(deptStationNum); /**/
-    queryParams += "&" + encodeURIComponent("dest_station_code") + "=" + encodeURIComponent(destStationNum); /**/
-    queryParams += "&" + encodeURIComponent("week") + "=" + encodeURIComponent("DAY"); /**/
-    queryParams += "&" + encodeURIComponent("search_type") + "=" + encodeURIComponent("FASTEST"); /**/
-    queryParams += "&" + encodeURIComponent("first_last") + "=" + encodeURIComponent(""); /**/
-    queryParams += "&" + encodeURIComponent("dept_time") + "=" + encodeURIComponent("120001"); /**/
-    queryParams += "&" + encodeURIComponent("train_seq") + "=" + encodeURIComponent(""); /**/
-
+    var url = "https://apis.openapi.sk.com/puzzle/congestion-train/stat/stations/" + stationCode + "?"; /*URL*/
+    url += "&" + encodeURIComponent("dow") + "=" + encodeURIComponent(day); /**/
+    url += "&" + encodeURIComponent("hh") + "=" + encodeURIComponent(hour); /**/
     let options = {
         headers: headers,
-        url: url + queryParams,
+        url: url,
         method: "GET",
     };
     return fetch(options.url, options)
@@ -63,11 +42,20 @@ function callRoute(deptStationNum, destStationNum) {
                     console.log("err");
                     return Promise.reject(json);
                 }
-                //console.log(json.data)
-                return Promise.resolve(json.data);
+                //console.log(json);
+                return Promise.resolve(json.contents.stat);
             })
         )
         .catch((error) => {
             return Promise.resolve(null);
         });
+}
+
+function findCongestion(congestionData, updnLine, time) {
+    console.log(congestionData)
+    for (let data of congestionData) {
+        if (data.updnLine === updnLine && data.data[parseInt(time / 1000) % 10].congestionTrain != 0) {
+            return data.data[parseInt(time / 1000) % 10].congestionTrain;
+        }
+    }
 }

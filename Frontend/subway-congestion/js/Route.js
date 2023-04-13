@@ -25,7 +25,9 @@ export async function routeApi(deptStationName, destStationName, time) {
                 new Promise((resolve, reject) => {
                     resolve(callRoute(deptCode, destCode, time));
                 }).then((json)=>{
-                    routesJson.push(json)
+                    if(json){
+                        routesJson.push(json)
+                    }
                 })
             );
         }

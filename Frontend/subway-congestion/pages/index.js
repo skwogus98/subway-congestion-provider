@@ -1,30 +1,69 @@
-import Head from "next/head";
+//import { callApi } from "@/js/CallAPI";
+import { useState, useEffect } from "react";
+
+function callApi(addr) {
+    let headers = new Headers({
+        "Content-Type": "application/json",
+    });
+    var url = "http://localhost:3000/api/";
+    let options = {
+        headers: headers,
+        url: url + addr,
+        method: "GET",
+    };
+    return fetch(options.url, options)
+        .then((response) => {
+            return response;
+        })
+        .catch((error) => {
+            return Promise.reject(null);
+        });
+}
 
 export default function Home() {
-    async function searchRoute() {
-        let headers = new Headers({
-            "Content-Type": "application/json",
-        });
-        let options = {
-            headers: headers,
-            url: "http://localhost:3000" + "/api/hello",
-            method: "GET",
-        };
-        const data = await fetch(options.url, options).then((res) => {
-            return res.json();
-        });
-        console.log(data);
-    }
-    //searchRoute();
+    const [route, setRoute] = useState([]);
+
+    useEffect(() => {
+        console.log(route);
+    }, [route]);
+
+    useEffect(() => {
+        callApi("route")
+            .then((response) => {
+                if (response != null) {
+                    response.json().then((json) => {
+                        setRoute(json);
+                    });
+                } else {
+                    alert("경로가 없습니다.");
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
     return (
-        <>
-            <Head>
-                <title>지하철 혼잡도 제공 시스템</title>
-                <meta name="description" content="서울 지하철 혼잡도 예측 시스템" />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <link rel="icon" href="data:image/svg+xml, /bezier2.svg" />
-            </Head>
-            <main></main>
-        </>
+        <main>
+            {route.map((dat, key) => {
+                if (dat!=null) {
+                    return (
+                        <div key={key}>
+                            <div>{dat.fee}원</div>
+                            {dat.route.map((station, k) => {
+                                return (
+                                    <div key={k}>
+                                        {station.station_nm}, {station.line_num}호선
+                                    </div>
+                                );
+                            })}
+                            <br/>
+                        </div>
+                    );
+                }
+                else{
+                    return("")
+                }
+            })}
+        </main>
     );
 }

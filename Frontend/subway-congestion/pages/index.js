@@ -1,4 +1,5 @@
 //import { callApi } from "@/js/CallAPI";
+import StationNode from "@/components/StationNode";
 import { useState, useEffect } from "react";
 
 function callApi(addr) {
@@ -56,23 +57,24 @@ export default function Home() {
         }
     }, [route]);
 
-    useEffect(() => {
-        callApi("route")
-            .then((response) => {
-                if (response != null) {
-                    response.json().then((json) => {
-                        setRoute(json);
-                    });
-                } else {
-                    alert("경로가 없습니다.");
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }, []);
+    // useEffect(() => {
+    //     callApi("route")
+    //         .then((response) => {
+    //             if (response != null) {
+    //                 response.json().then((json) => {
+    //                     setRoute(json);
+    //                 });
+    //             } else {
+    //                 alert("경로가 없습니다.");
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.log(err);
+    //         });
+    // }, []);
     return (
         <main>
+            <StationNode></StationNode>
             {route.map((dat, key) => {
                 if (dat != null) {
                     return (

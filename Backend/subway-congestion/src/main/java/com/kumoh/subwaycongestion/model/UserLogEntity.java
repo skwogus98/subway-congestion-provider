@@ -14,12 +14,12 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Bookmark")
+@Table(name = "UserLog")
 public class UserLogEntity {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private Integer id;
+    private String id;
 
     @Column(nullable = false)
     private String email;

@@ -4,7 +4,9 @@ package com.kumoh.subwaycongestion.controller;
 import com.kumoh.subwaycongestion.dto.ResponseDTO;
 import com.kumoh.subwaycongestion.dto.UserDTO;
 import com.kumoh.subwaycongestion.model.UserEntity;
+import com.kumoh.subwaycongestion.model.UserLogEntity;
 import com.kumoh.subwaycongestion.security.TokenProvider;
+import com.kumoh.subwaycongestion.service.UserLogService;
 import com.kumoh.subwaycongestion.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +18,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 @Slf4j
 @RestController
 @RequestMapping("/auth")
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserLogService userLogService;
 
     @Autowired
     private TokenProvider tokenProvider;
@@ -54,14 +61,16 @@ public class UserController {
     @PostMapping("/signin")
     public ResponseEntity<?> auth(@RequestBody UserDTO userDTO) {
         UserEntity user = userService.getByCredentials(userDTO.getEmail(), userDTO.getPassword(), passwordEncoder);
-
+        UserLogEntity userLog = UserLogEntity.builder().email(userDTO.getEmail()).loginTime(new Date()).build();
         if (user != null) {
             final String token = tokenProvider.create(user);
+            userLogService.create(userLog);
             final UserDTO responseUserDTO = UserDTO.builder()
                     .email(user.getEmail())
                     .id(user.getId())
                     .token(token)
                     .build();
+
             return ResponseEntity.ok().body(responseUserDTO);
         } else {
             ResponseDTO responseDTO = ResponseDTO.builder().error("login failed").build();

@@ -74,7 +74,6 @@ export default function Home() {
     // }, []);
     return (
         <main>
-            <StationNode></StationNode>
             {route.map((dat, key) => {
                 if (dat != null) {
                     return (

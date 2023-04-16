@@ -45,17 +45,17 @@ function callRoute(route) {
 export default function Home() {
     const [route, setRoute] = useState([]);
 
-    useEffect(() => {
-        if (route[0]) {
-            callRoute(route[0].route).then((res) => {
-                if (res) {
-                    res.json().then((json) => {
-                        console.log(json);
-                    });
-                }
-            });
-        }
-    }, [route]);
+    // useEffect(() => {
+    //     if (route[0]) {
+    //         callRoute(route[0].route).then((res) => {
+    //             if (res) {
+    //                 res.json().then((json) => {
+    //                     console.log(json);
+    //                 });
+    //             }
+    //         });
+    //     }
+    // }, [route]);
 
     // useEffect(() => {
     //     callApi("route")
@@ -74,7 +74,7 @@ export default function Home() {
     // }, []);
     return (
         <main>
-            {route.map((dat, key) => {
+            {/* {route.map((dat, key) => {
                 if (dat != null) {
                     return (
                         <div key={key}>
@@ -92,7 +92,7 @@ export default function Home() {
                 } else {
                     return "";
                 }
-            })}
+            })} */}
         </main>
     );
 }

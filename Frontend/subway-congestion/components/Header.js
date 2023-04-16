@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import Link from "next/link";
+import React, { useState, useEffect } from "react";
 
 const Header = ({ isLoggedIn, userName }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    isLoggedIn = true
-    const handleDropdownToggle = () => {
+    //isLoggedIn = true;
+    function handleDropdownToggle() {
         setIsDropdownOpen(!isDropdownOpen);
+        console.log("hi")
     };
-
     return (
         <header className="flex items-center justify-between py-4 px-6 bg-gray-800 text-white">
             <div>
-                <h1 className="text-2xl font-bold">지하철 혼잡도</h1>
+                <Link href={"/"} className="text-2xl font-bold">지하철 혼잡도</Link>
             </div>
             <div>
                 {isLoggedIn ? (
@@ -29,7 +30,7 @@ const Header = ({ isLoggedIn, userName }) => {
                         )}
                     </div>
                 ) : (
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">로그인</button>
+                    <Link href={"/login"} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">로그인</Link>
                 )}
             </div>
         </header>

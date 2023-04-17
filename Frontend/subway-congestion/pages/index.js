@@ -15,11 +15,12 @@ function callApi(addr) {
     let headers = new Headers({
         "Content-Type": "application/json",
     });
-    var url = "http://localhost:3000/api/";
+    var url = "http://localhost:3000/api/route";
     let options = {
         headers: headers,
-        url: url + addr,
-        method: "GET",
+        url: url,
+        method: "POST",
+        body:JSON.stringify(addr),
     };
     return fetch(options.url, options)
         .then((response) => {
@@ -53,11 +54,13 @@ function callRoute(route) {
 
 export default function Home() {
     const [route, setRoute] = useState([]);
-
+    const [stationFrom, setStationFrom] = useState({ line: "", stationName: "" });
+    const [stationTo, setStationTo] = useState({ line: "", stationName: "" });
     const router = useRouter();
 
     // 서버 사이드 렌더링 시 로그인 데이터를 체크하여 /login 페이지로 리다이렉션
     useEffect(() => {
+        localStorage.setItem("ACCESS_TOKEN", "aasdf");
         if (getJwtFromLocalStorage() === null) {
             // 서버 사이드 렌더링에서 리다이렉션을 위해 res.writeHead() 등을 사용하여 리다이렉션 처리
             if (typeof window !== "undefined") {
@@ -68,55 +71,36 @@ export default function Home() {
         }
     }, []);
 
-    // useEffect(() => {
-    //     if (route[0]) {
-    //         callRoute(route[0].route).then((res) => {
-    //             if (res) {
-    //                 res.json().then((json) => {
-    //                     console.log(json);
-    //                 });
-    //             }
-    //         });
-    //     }
-    // }, [route]);
+    useEffect(() => {
+        // if (route[0]) {
+        //     callRoute(route[0].route).then((res) => {
+        //         if (res) {
+        //             res.json().then((json) => {
+        //                 console.log(json);
+        //             });
+        //         }
+        //     });
+        // }
+    }, [route]);
 
-    // useEffect(() => {
-    //     callApi("route")
-    //         .then((response) => {
-    //             if (response != null) {
-    //                 response.json().then((json) => {
-    //                     setRoute(json);
-    //                 });
-    //             } else {
-    //                 alert("경로가 없습니다.");
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             console.log(err);
-    //         });
-    // }, []);
+    function getRoute(){
+        callApi({"stationFrom":stationFrom, "stationTo":stationTo, "time":new Date().getHours()*10000+new Date().getMinutes()*100})
+            .then((response) => {
+                if (response != null) {
+                    response.json().then((json) => {
+                        setRoute(json);
+                    });
+                } else {
+                    alert("경로가 없습니다.");
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
     return (
         <main>
-            <SelectStaion></SelectStaion>
-            {/* {route.map((dat, key) => {
-                if (dat != null) {
-                    return (
-                        <div key={key}>
-                            <div>{dat.fee}원</div>
-                            {dat.route.map((station, k) => {
-                                return (
-                                    <div key={k}>
-                                        {station.station_nm}, {station.line_num}호선
-                                    </div>
-                                );
-                            })}
-                            <br />
-                        </div>
-                    );
-                } else {
-                    return "";
-                }
-            })} */}
+            <SelectStaion setStationFrom={setStationFrom} setStationTo={setStationTo} stationFrom={stationFrom} stationTo={stationTo} getRoute={getRoute} routes={route}/>
         </main>
     );
 }

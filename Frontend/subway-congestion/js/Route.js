@@ -5,28 +5,28 @@ import RouteStation from "../json/RouteStation.json";
 const serviceKey = "Uv%2FK1UoTGrRYC0Rih%2FYZCegc6QCLg1QoiZTnd37b5GbSXtFk3HX67IzRZzxSXBOoOPMbbegMlLrqpF2sGKvokw%3D%3D";
 
 export async function routeApi(deptStationName, destStationName, time) {
-    deptStationName = "서울역";
-    destStationName = "한양대";
-    time= 172000
+    time = 172000;
     let dept = [];
     let dest = [];
     let routesJson = [];
     for (let station of RouteStation) {
-        if (station.station_name == deptStationName) {
+        if (station.station_name === deptStationName.stationName) {
             dept.push(station.station_code.length == 3 ? "0" + station.station_code : station.station_code);
-        } else if (station.station_name == destStationName) {
+        } else if (station.station_name === destStationName.stationName) {
             dest.push(station.station_code.length == 3 ? "0" + station.station_code : station.station_code);
         }
     }
+    console.log(dept);
+    console.log(dest);
     let promises = [];
     for (let deptCode of dept) {
         for (let destCode of dest) {
             promises.push(
                 new Promise((resolve, reject) => {
                     resolve(callRoute(deptCode, destCode, time));
-                }).then((json)=>{
-                    if(json){
-                        routesJson.push(json)
+                }).then((json) => {
+                    if (json) {
+                        routesJson.push(json);
                     }
                 })
             );

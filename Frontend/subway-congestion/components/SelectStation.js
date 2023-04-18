@@ -7,6 +7,17 @@ export default function SelectStaion(props) {
     const [selectedStation, setSelectedStation] = useState("");
     const [route, setRoute] = useState([]);
 
+    const [searchTerm, setSearchTerm] = useState(""); // 검색어를 저장할 state
+    const [filteredStations, setFilteredStations] = useState([]); // 검색된 역 목록을 저장할 state
+
+    // 검색어가 변경될 때마다 검색된 역 목록을 업데이트
+    useEffect(() => {
+        if (selectedLine && stationsByLine[selectedLine]) {
+            const filtered = stationsByLine[selectedLine].filter((station) => station.toLowerCase().includes(searchTerm.toLowerCase()));
+            setFilteredStations(filtered);
+        }
+    }, [searchTerm, selectedLine, stationsByLine]);
+
     const handleLineChange = (e) => {
         setSelectedLine(e.target.value);
         setSelectedStation("");
@@ -16,10 +27,10 @@ export default function SelectStaion(props) {
     const handleToggle = (index) => {
         if (expandedIndex === index) {
             setExpandedIndex(-1);
-            setRoute([])
+            setRoute([]);
         } else {
             setExpandedIndex(index);
-            setRoute(props.routes[expandedIndex])
+            setRoute(props.routes[expandedIndex]);
         }
     };
 
@@ -52,11 +63,18 @@ export default function SelectStaion(props) {
                     </select>
                 </div>
                 <div className="h-5/6">
-                    {selectedLine && (
-                        <div className="h-5/6 overflow-y-auto">
-                            <table className="w-full border-collapse">
+                    <input
+                        type="text"
+                        className="w-full py-2 px-4 border border-gray-300 focus:outline-none"
+                        placeholder="검색"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <div className="h-5/6 overflow-y-auto">
+                        <table className="w-full border-collapse">
+                            {selectedLine && (
                                 <tbody>
-                                    {stationsByLine[selectedLine].map((station, index) => (
+                                    {filteredStations.map((station, index) => (
                                         <tr key={index} className="cursor-pointer hover:bg-gray-100">
                                             <td className="py-2 px-4 border border-gray-300 flex justify-between">
                                                 <div>{station}</div>
@@ -82,9 +100,9 @@ export default function SelectStaion(props) {
                                         </tr>
                                     ))}
                                 </tbody>
-                            </table>
-                        </div>
-                    )}
+                            )}
+                        </table>
+                    </div>
                 </div>
             </div>
             <div className="w-2/3 p-4">
@@ -128,11 +146,23 @@ export default function SelectStaion(props) {
                     <button className="bg-blue-500 text-white py-2 px-4 rounded-lg" onClick={props.getRoute}>
                         검색
                     </button>
+                    <button
+                        className="bg-yellow-400 hover:bg-yellow-500 text-white py-2 px-2 ml-2 rounded-lg"
+                        onClick={() => {
+                            // 별모양 마크 클릭 이벤트 핸들러
+                            // 원하는 로직을 추가하시면 됩니다.
+                            console.log("별모양 마크 클릭됨");
+                        }}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20">
+                            <path fill="currentColor" d="M10 1L8.21 5.55H3.79L7.64 8.49l-2.21 3.38L10 10.74l4.78 1.13-2.21-3.38L16.21 5.55H11.8L10 1z" />
+                        </svg>
+                    </button>
                 </div>
 
                 <div className="w-full max-w-md mx-auto mt-8 bg-white min-h-96">
                     {!props.routes ? (
-                        ""
+                        <p>결과 없음</p>
                     ) : (
                         <div className="bg-white">
                             {props.routes.map((route, index) => (

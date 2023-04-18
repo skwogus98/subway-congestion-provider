@@ -18,6 +18,8 @@ export async function congestion(stationName, stationNum, day, time, updnLine) {
     }
     await callCongestion(stationCode, day, parseInt(time / 10000)).then((res) => {
         congestion.congestion = findCongestion(res, updnLine, time);
+    }).catch((err)=>{
+        return Promise.reject(err)
     });
     return congestion;
 }

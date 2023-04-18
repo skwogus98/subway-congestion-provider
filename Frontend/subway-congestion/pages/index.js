@@ -31,27 +31,6 @@ function callApi(addr) {
         });
 }
 
-function callRoute(route) {
-    let headers = new Headers({
-        "Content-Type": "application/json",
-    });
-    //console.log(route);
-    var url = "http://localhost:3000/api/congestion";
-    let options = {
-        headers: headers,
-        url: url,
-        method: "POST",
-        body: JSON.stringify(route),
-    };
-    return fetch(options.url, options)
-        .then((response) => {
-            return response;
-        })
-        .catch((error) => {
-            return Promise.reject(null);
-        });
-}
-
 export default function Home() {
     const [route, setRoute] = useState([]);
     const [stationFrom, setStationFrom] = useState({ line: "", stationName: "" });
@@ -71,20 +50,36 @@ export default function Home() {
         }
     }, []);
 
-    useEffect(() => {
-        // if (route[0]) {
-        //     callRoute(route[0].route).then((res) => {
-        //         if (res) {
-        //             res.json().then((json) => {
-        //                 console.log(json);
-        //             });
-        //         }
-        //     });
-        // }
-    }, [route]);
+    useEffect(()=>{
+        setRoute([])
+    },[stationFrom, stationTo])
+
+    const [selectedDay, setSelectedDay] = useState(getCurrentDay());
+    const [selectedTime, setSelectedTime] = useState(getCurrentTime());
+
+    // 현재 요일 가져오기
+    function getCurrentDay() {
+        const days = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+        return days[new Date().getDay()];
+    }
+
+    // 현재 시간 가져오기
+    function getCurrentTime() {
+        const now = new Date();
+        const hour = now.getHours();
+        const minute = Math.floor(now.getMinutes() / 10) * 10;
+        return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+    }
+
+    // 현재 시간으로 설정 변경
+    const handleSetCurrentTime = () => {
+        setSelectedDay(getCurrentDay());
+        setSelectedTime(getCurrentTime());
+    };
 
     function getRoute(){
-        callApi({"stationFrom":stationFrom, "stationTo":stationTo, "time":new Date().getHours()*10000+new Date().getMinutes()*100})
+        let time = selectedTime.split(":")
+        callApi({"stationFrom":stationFrom, "stationTo":stationTo, "time":time[0] * 10000 + time[1] * 100})
             .then((response) => {
                 if (response != null) {
                     response.json().then((json) => {
@@ -100,7 +95,10 @@ export default function Home() {
     }
     return (
         <main>
-            <SelectStaion setStationFrom={setStationFrom} setStationTo={setStationTo} stationFrom={stationFrom} stationTo={stationTo} getRoute={getRoute} routes={route}/>
+            <SelectStaion 
+            setStationFrom={setStationFrom} setStationTo={setStationTo} stationFrom={stationFrom} stationTo={stationTo} 
+            getRoute={getRoute} routes={route} 
+            selectedDay={selectedDay} selectedTime={selectedTime} setSelectedDay={setSelectedDay} setSelectedTime={setSelectedTime} handleSetCurrentTime={handleSetCurrentTime}/>
         </main>
     );
 }

@@ -18,7 +18,9 @@ export default async function handler(req, res) {
                 })
             );
         }
-        await Promise.all(promises).then(() => {});
+        await Promise.all(promises).then(() => {}).catch((err)=>{
+            res.status(500).json({err:"api error"})
+        })
         console.log(congestions);
         res.status(200).json(congestions);
         //await res.status(200).json(req.body);

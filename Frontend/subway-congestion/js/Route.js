@@ -5,7 +5,6 @@ import RouteStation from "../json/RouteStation.json";
 const serviceKey = "Uv%2FK1UoTGrRYC0Rih%2FYZCegc6QCLg1QoiZTnd37b5GbSXtFk3HX67IzRZzxSXBOoOPMbbegMlLrqpF2sGKvokw%3D%3D";
 
 export async function routeApi(deptStationName, destStationName, time) {
-    time = 172000;
     let dept = [];
     let dest = [];
     let routesJson = [];

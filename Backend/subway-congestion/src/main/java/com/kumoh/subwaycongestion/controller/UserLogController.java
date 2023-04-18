@@ -30,7 +30,6 @@ public class UserLogController {
     private ResponseEntity<?> getLog(@AuthenticationPrincipal String userId){
         String temporaryUserId = userId;
         List<UserLogEntity> entities = userLogService.retrieve();
-        //userService.
         List<UserLogDTO> dtos = entities.stream().map(UserLogDTO::new).collect(Collectors.toList());
         ResponseDTO<UserLogDTO> responseDTO = ResponseDTO.<UserLogDTO>builder().data(dtos).build();
         return ResponseEntity.ok().body(responseDTO);

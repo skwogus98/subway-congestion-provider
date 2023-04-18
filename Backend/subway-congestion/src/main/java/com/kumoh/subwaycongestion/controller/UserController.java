@@ -1,6 +1,5 @@
 package com.kumoh.subwaycongestion.controller;
 
-
 import com.kumoh.subwaycongestion.dto.ResponseDTO;
 import com.kumoh.subwaycongestion.dto.UserDTO;
 import com.kumoh.subwaycongestion.model.UserEntity;
@@ -68,6 +67,7 @@ public class UserController {
             final UserDTO responseUserDTO = UserDTO.builder()
                     .email(user.getEmail())
                     .id(user.getId())
+                    .grade(user.getGrade())
                     .token(token)
                     .build();
 

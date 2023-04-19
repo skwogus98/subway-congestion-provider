@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import stationsByLine from "../json/SelectStation.json";
 import RouteCongestion from "./RouteCongestion";
+import { addBookmark } from "@/js/Bookmark";
 
 export default function SelectStaion(props) {
     const [selectedLine, setSelectedLine] = useState("");
@@ -152,6 +153,11 @@ export default function SelectStaion(props) {
                             // 별모양 마크 클릭 이벤트 핸들러
                             // 원하는 로직을 추가하시면 됩니다.
                             console.log("별모양 마크 클릭됨");
+                            addBookmark({
+                                email: localStorage.getItem("EMAIL"),
+                                stationFrom: props.stationFrom.stationName,
+                                stationTo: props.stationTo.stationName,
+                            });
                         }}
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" viewBox="0 0 20 20">

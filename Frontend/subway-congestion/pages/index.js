@@ -3,6 +3,7 @@ import SelectStaion from "@/components/SelectStation";
 import StationNode from "@/components/StationNode";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import { addSearchLog } from "@/js/Log";
 
 const getJwtFromLocalStorage = () => {
     if (typeof window !== "undefined") {
@@ -51,6 +52,14 @@ export default function Home() {
     }, []);
 
     useEffect(()=>{
+        if(Object.keys(router.query).length!==0){
+            //console.log( router.query)
+            setStationFrom({ line: "", stationName: router.query.stationFrom })
+            setStationTo( {line: "", stationName: router.query.stationTo })
+        }
+    }, [router])
+
+    useEffect(()=>{
         setRoute([])
     },[stationFrom, stationTo])
 
@@ -78,6 +87,8 @@ export default function Home() {
     };
 
     function getRoute(){
+        addSearchLog(stationFrom.stationName)
+        addSearchLog(stationTo.stationName)
         let time = selectedTime.split(":")
         callApi({"stationFrom":stationFrom, "stationTo":stationTo, "time":time[0] * 10000 + time[1] * 100})
             .then((response) => {

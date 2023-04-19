@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { signout } from "@/js/SignUp";
+import { getBookmark, deleteBookmark } from "@/js/Bookmark";
 
 const getJwtFromLocalStorage = () => {
     if (typeof window !== "undefined") {
@@ -11,6 +12,7 @@ const getJwtFromLocalStorage = () => {
 
 const Header = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [bookmarks, setBookmarks] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     //isLoggedIn = true;
     function handleDropdownToggle() {
@@ -22,6 +24,10 @@ const Header = () => {
             setIsLoggedIn(false);
         } else {
             setIsLoggedIn(true);
+            getBookmark({email:localStorage.getItem("EMAIL")}).then((res)=>{
+                setBookmarks(res)
+                console.log(res)
+            })
         }
     }, []);
 
@@ -45,7 +51,26 @@ const Header = () => {
                         {isDropdownOpen && (
                             <ul className="absolute right-0 mt-2 bg-white text-gray-800 rounded shadow-lg text-left">
                                 <li className="px-4 py-2">북마크</li>
+                                <div className={"border-b-2"}></div>
                                 {/* 추가적인 드롭다운 메뉴 아이템들을 여기에 추가할 수 있습니다 */}
+                                {
+                                    bookmarks.map((val,key)=>{
+                                        return(
+                                            <li key={key} className="px-4 py-2">
+                                                <Link href={"/?stationFrom="+val.stationFrom+"&stationTo="+val.stationTo}>{val.stationFrom}{"->"}{val.stationTo}</Link>
+                                                <button className="bg-red-500 hover:bg-red-600 text-white w-6 ml-4 rounded" onClick={()=>deleteBookmark({id:val.id})}>x</button>
+                                            </li>
+                                            
+                                        )
+                                    })
+                                }
+                                <div className={"border-b-2"}></div>
+                                <li className="px-4 py-2">
+                                    <Link href={"/editprofile"}>
+                                        회원정보 수정
+                                    </Link>
+                                </li>
+                                <div className={"border-b-2"}></div>
                                 <li className="px-4 py-2">
                                     <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded" onClick={signout}>
                                         로그아웃

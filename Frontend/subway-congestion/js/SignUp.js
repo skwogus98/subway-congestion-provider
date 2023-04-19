@@ -1,5 +1,4 @@
 import { API_BASE_URL } from "../app-config";
-const ACCESS_TOKEN = "ACCESS_TOKEN";
 
 export function call(api, method, request) {
     let headers = new Headers({
@@ -72,5 +71,33 @@ export function signup(userDTO) {
 export function signout() {
     // local 스토리지에 토큰 삭제
     localStorage.removeItem("ACCESS_TOKEN");
+    localStorage.removeItem("USER_NAME");
+    localStorage.removeItem("EMAIL");
     window.location.href = "/";
+}
+
+//회원정보 수정
+export function editProfile(userDTO) {
+    return call("/auth/update", "POST", userDTO)
+        .then((response) => {
+            if (response.id) {
+                alert("다시 로그인 해주세요.");
+                signout();
+            }
+        })
+        .catch((error) => {
+            return Promise.reject(error);
+        });
+}
+//삭제
+export function deleteProfile(userDTO) {
+    return call("/auth/delete", "POST", userDTO)
+        .then(() => {
+            alert("삭제가 완료되었습니다.");
+            signout();
+        })
+        .catch((err) => {
+            console.log(err)
+            alert(err);
+        });
 }

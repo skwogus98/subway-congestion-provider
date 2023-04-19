@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { deleteProfile, editProfile } from "@/js/SignUp";
 
 export default function EditProfile() {
     // localStorage에서 이메일과 사용자 이름 가져오기
-    var email = "";
     useEffect(() => {
         if (typeof window !== "undefined") {
-            email = localStorage.getItem("EMAIL");
-            setUsername(localStorage.getItem("USER_NAME"))
+            setEmail(localStorage.getItem("EMAIL"));
+            setUsername(localStorage.getItem("USER_NAME"));
         }
     }, []);
 
@@ -14,6 +14,7 @@ export default function EditProfile() {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
 
     // 현재 비밀번호 변경 이벤트 핸들러
     const handleCurrentPasswordChange = (e) => {
@@ -35,7 +36,7 @@ export default function EditProfile() {
         // 원하는 로직을 추가하시면 됩니다.
         if (confirm("정말 탈퇴하시겠습니까?")) {
             //이벤트
-            console.log(true);
+            deleteProfile({ email: email });
         }
     };
 
@@ -44,6 +45,7 @@ export default function EditProfile() {
         e.preventDefault();
         // 원하는 로직을 추가하시면 됩니다.
         console.log("회원 정보 수정 버튼 클릭됨");
+        editProfile({ email: localStorage.getItem("EMAIL"), password: currentPassword, newPassword: newPassword, username: username });
     };
     return (
         <div className="container mx-auto mt-8">
@@ -59,7 +61,7 @@ export default function EditProfile() {
                     <label className="block text-gray-700 mb-2" htmlFor="username">
                         사용자 이름
                     </label>
-                    <input className="w-full border-gray-300 rounded-md px-4 py-2" type="text" id="username" name="username" value={username} />
+                    <input className="w-full border-gray-300 rounded-md px-4 py-2" type="text" id="username" name="username" value={username} onChange={handleUsernameChange}/>
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 mb-2" htmlFor="currentPassword">

@@ -18,14 +18,7 @@ public class SearchLogEntity {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private Integer id;
-
+    private String id;
     @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String stationFrom;
-
-    @Column(nullable = false)
-    private String stationTo;
+    private String station;
 }

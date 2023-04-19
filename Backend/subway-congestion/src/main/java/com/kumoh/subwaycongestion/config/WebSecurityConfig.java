@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //
                 .disable().httpBasic().disable().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().antMatchers("/", "/auth/**", "/log").permitAll()
+                .and().authorizeRequests().antMatchers("/", "/auth/**", "/log", "/bookmark", "/searchLog").permitAll()
                 //추가
                 .antMatchers("/h2-console/**").permitAll()
                 //

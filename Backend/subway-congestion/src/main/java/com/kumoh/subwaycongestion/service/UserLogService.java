@@ -29,4 +29,5 @@ public class UserLogService {
     public List<UserLogEntity> retrieve() {
         return userLogRepository.findAll();
     }
+
 }

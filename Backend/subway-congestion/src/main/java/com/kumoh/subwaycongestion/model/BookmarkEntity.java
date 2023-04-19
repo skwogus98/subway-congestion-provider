@@ -18,7 +18,7 @@ public class BookmarkEntity {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
-    private Integer id;
+    private String id;
 
     @Column(nullable = false)
     private String email;

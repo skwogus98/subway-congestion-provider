@@ -48,4 +48,9 @@ public class UserService {
     public Optional<UserEntity> getGrade(final String id) {
         return userRepository.findById(id);
     }
+
+    @Transactional
+    public void delete(final String email) {
+        userRepository.deleteByEmail(email);
+    }
 }

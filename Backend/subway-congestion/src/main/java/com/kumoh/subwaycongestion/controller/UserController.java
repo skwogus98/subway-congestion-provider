@@ -68,6 +68,7 @@ public class UserController {
                     .email(user.getEmail())
                     .id(user.getId())
                     .grade(user.getGrade())
+                    .username(user.getUsername())
                     .token(token)
                     .build();
 
@@ -78,27 +79,39 @@ public class UserController {
         }
     }
 
-//    @PostMapping("/update")
-//    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
-//        UserEntity user = userService.getByCredentials(userDTO.getEmail(), userDTO.getPassword(), passwordEncoder);
-//
-//        if (user != null) {
-//            UserEntity newUser = UserEntity.builder()
-//                    .email(userDTO.getEmail())
-//                    .username(userDTO.getUsername())
-//                    .password(passwordEncoder.encode(userDTO.getNewPassword()))
-//                    .build();
-//            UserEntity registeredUser = userService.update(user, newUser);
-//            UserDTO responseUserDTO = userDTO.builder()
-//                    .email(registeredUser.getEmail())
-//                    .id(registeredUser.getId())
-//                    .username(registeredUser.getUsername())
-//                    .build();
-//            return ResponseEntity.ok().body(responseUserDTO);
-//        } else {
-//            ResponseDTO responseDTO = ResponseDTO.builder().error("login failed").build();
-//            return ResponseEntity.badRequest().body(responseDTO);
-//        }
-//    }
+    @PostMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
+        UserEntity user = userService.getByCredentials(userDTO.getEmail(), userDTO.getPassword(), passwordEncoder);
+
+        if (user != null) {
+            UserEntity newUser = UserEntity.builder()
+                    .email(userDTO.getEmail())
+                    .username(userDTO.getUsername())
+                    .password(passwordEncoder.encode(userDTO.getNewPassword()))
+                    .build();
+            UserEntity registeredUser = userService.update(user, newUser);
+            UserDTO responseUserDTO = userDTO.builder()
+                    .email(registeredUser.getEmail())
+                    .id(registeredUser.getId())
+                    .username(registeredUser.getUsername())
+                    .build();
+            return ResponseEntity.ok().body(responseUserDTO);
+        } else {
+            ResponseDTO responseDTO = ResponseDTO.builder().error("login failed").build();
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody UserDTO userDTO) {
+        if (userDTO != null) {
+            userService.delete(userDTO.getEmail());
+            ResponseDTO responseDTO = ResponseDTO.builder().data(null).build();
+            return ResponseEntity.ok().body(responseDTO);
+        } else {
+            ResponseDTO responseDTO = ResponseDTO.builder().error("delete failed").build();
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
 }
 

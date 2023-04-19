@@ -38,6 +38,7 @@ export default function SelectStaion(props) {
     // 요일 변경 시
     const handleDayChange = (e) => {
         props.setSelectedDay(e.target.value);
+        console.log(e.target.value)
     };
 
     // 시간 변경 시
@@ -109,13 +110,13 @@ export default function SelectStaion(props) {
             <div className="w-2/3 p-4">
                 <div className="flex justify-center space-x-4">
                     <select value={props.selectedDay} onChange={handleDayChange} className="w-1/4 p-2 rounded-md">
-                        <option value="일요일">일요일</option>
-                        <option value="월요일">월요일</option>
-                        <option value="화요일">화요일</option>
-                        <option value="수요일">수요일</option>
-                        <option value="목요일">목요일</option>
-                        <option value="금요일">금요일</option>
-                        <option value="토요일">토요일</option>
+                        <option value="SUN">일요일</option>
+                        <option value="MON">월요일</option>
+                        <option value="TUE">화요일</option>
+                        <option value="WED">수요일</option>
+                        <option value="THU">목요일</option>
+                        <option value="FRI">금요일</option>
+                        <option value="SAT">토요일</option>
                     </select>
 
                     <select value={props.selectedTime} onChange={handleTimeChange} className="w-1/4 p-2 rounded-md">
@@ -197,9 +198,7 @@ export default function SelectStaion(props) {
                                                 transition: "max-height 0.5s ease-out, opacity 0.5s ease-out",
                                             }}
                                         >
-                                            <p>역이름: {props.routes[expandedIndex].route.map((station) => station.station_nm).join(", ")}</p>
-                                            <p>라인번호: {props.routes[expandedIndex].route.map((station) => station.line_num).join(", ")}</p>
-                                            <RouteCongestion route={route} />
+                                            <RouteCongestion route={route}/>
                                         </div>
                                     )}
                                 </div>

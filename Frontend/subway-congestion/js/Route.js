@@ -4,7 +4,7 @@ import RouteStation from "../json/RouteStation.json";
 //env 필요
 const serviceKey = "Uv%2FK1UoTGrRYC0Rih%2FYZCegc6QCLg1QoiZTnd37b5GbSXtFk3HX67IzRZzxSXBOoOPMbbegMlLrqpF2sGKvokw%3D%3D";
 
-export async function routeApi(deptStationName, destStationName, time) {
+export async function routeApi(deptStationName, destStationName, time, day) {
     let dept = [];
     let dest = [];
     let routesJson = [];
@@ -22,7 +22,7 @@ export async function routeApi(deptStationName, destStationName, time) {
         for (let destCode of dest) {
             promises.push(
                 new Promise((resolve, reject) => {
-                    resolve(callRoute(deptCode, destCode, time));
+                    resolve(callRoute(deptCode, destCode, time, day));
                 }).then((json) => {
                     if (json) {
                         routesJson.push(json);
@@ -32,7 +32,6 @@ export async function routeApi(deptStationName, destStationName, time) {
         }
     }
     await Promise.all(promises).then(() => {
-        //console.log(routesJson);
     });
     /*
     {
@@ -47,17 +46,27 @@ export async function routeApi(deptStationName, destStationName, time) {
     return routesJson;
 }
 
-function callRoute(deptStationNum, destStationNum, time) {
+function callRoute(deptStationNum, destStationNum, time, day) {
     let headers = new Headers({
         "Content-Type": "application/json",
     });
+    var week = ""
+    if(day =="SUN"){
+        week = "HOL"
+    }
+    else if(day =="SAT"){
+        week = "SAT"
+    }
+    else{
+        week = "DAY"
+    }
     var url = "http://apis.data.go.kr/B553766/smt-path/path"; /*URL*/
     var queryParams = "?" + encodeURIComponent("serviceKey") + "=" + serviceKey; /*Service Key*/
     queryParams += "&" + encodeURIComponent("pageNo") + "=" + encodeURIComponent("1"); /**/
     queryParams += "&" + encodeURIComponent("numOfRows") + "=" + encodeURIComponent("10"); /**/
     queryParams += "&" + encodeURIComponent("dept_station_code") + "=" + encodeURIComponent(deptStationNum); /**/
     queryParams += "&" + encodeURIComponent("dest_station_code") + "=" + encodeURIComponent(destStationNum); /**/
-    queryParams += "&" + encodeURIComponent("week") + "=" + encodeURIComponent("DAY"); /**/
+    queryParams += "&" + encodeURIComponent("week") + "=" + encodeURIComponent(week); /**/
     queryParams += "&" + encodeURIComponent("search_type") + "=" + encodeURIComponent("FASTEST"); /**/
     queryParams += "&" + encodeURIComponent("first_last") + "=" + encodeURIComponent(""); /**/
     queryParams += "&" + encodeURIComponent("dept_time") + "=" + encodeURIComponent(time); /**/
@@ -76,6 +85,7 @@ function callRoute(deptStationNum, destStationNum, time) {
                     return Promise.reject(json);
                 }
                 //console.log(json.data)
+                json.data.day = day
                 return Promise.resolve(json.data);
             })
         )

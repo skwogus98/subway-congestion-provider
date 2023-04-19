@@ -37,7 +37,7 @@ const Header = () => {
                 {isLoggedIn ? (
                     <div className="relative inline-block text-right">
                         <div className="flex items-center cursor-pointer" onClick={handleDropdownToggle}>
-                            <p className="text-sm mr-4">안녕하세요, {/**/}님</p>
+                            <p className="text-sm mr-4">안녕하세요, {localStorage.getItem("USER_NAME")}님</p>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M10 11l-6-6h12l-6 6z" />
                             </svg>

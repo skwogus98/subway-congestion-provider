@@ -83,6 +83,9 @@ export default function Home() {
             .then((response) => {
                 if (response != null) {
                     response.json().then((json) => {
+                        if(json.length==0){
+                            alert("해당시간의 경로를 찾을 수 없습니다.")
+                        }
                         setRoute(json);
                     });
                 } else {

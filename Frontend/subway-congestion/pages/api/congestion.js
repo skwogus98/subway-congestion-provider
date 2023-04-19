@@ -4,6 +4,7 @@ export default async function handler(req, res) {
     if (req.method === "POST") {
         let congestions = [];
         let promises = [];
+        console.log(req.body);
         for (let key in req.body) {
             promises.push(
                 new Promise((resolve, reject) => {
@@ -21,7 +22,6 @@ export default async function handler(req, res) {
         await Promise.all(promises).then(() => {}).catch((err)=>{
             res.status(500).json({err:"api error"})
         })
-        console.log(congestions);
         res.status(200).json(congestions);
         //await res.status(200).json(req.body);
     } else {

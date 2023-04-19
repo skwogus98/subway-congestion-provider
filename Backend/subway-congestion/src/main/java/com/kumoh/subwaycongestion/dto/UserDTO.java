@@ -16,6 +16,6 @@ public class UserDTO {
     private String username;
     private String password;
     private String grade;
-    //private String newPassword;
+    private String newPassword;
     private String id;
 }

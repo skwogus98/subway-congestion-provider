@@ -38,7 +38,7 @@ export default function SelectStaion(props) {
     // 요일 변경 시
     const handleDayChange = (e) => {
         props.setSelectedDay(e.target.value);
-        console.log(e.target.value)
+        console.log(e.target.value);
     };
 
     // 시간 변경 시
@@ -167,11 +167,11 @@ export default function SelectStaion(props) {
                     </button>
                 </div>
 
-                <div className="w-full max-w-md mx-auto mt-8 bg-white min-h-96">
+                <div className="w-full max-w-md mx-auto mt-8 bg-white min-h-96 h-2/3 overflow-y-auto">
                     {!props.routes ? (
                         <p>결과 없음</p>
                     ) : (
-                        <div className="bg-white">
+                        <div className="bg-white h-2/3">
                             {props.routes.map((route, index) => (
                                 <div key={index} className="border-b-2 p-4 my-6">
                                     <div className="flex items-center justify-between">
@@ -198,7 +198,7 @@ export default function SelectStaion(props) {
                                                 transition: "max-height 0.5s ease-out, opacity 0.5s ease-out",
                                             }}
                                         >
-                                            <RouteCongestion route={route}/>
+                                            <RouteCongestion route={route} />
                                         </div>
                                     )}
                                 </div>

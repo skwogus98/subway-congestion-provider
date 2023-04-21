@@ -40,7 +40,7 @@ export default function Home() {
 
     // 서버 사이드 렌더링 시 로그인 데이터를 체크하여 /login 페이지로 리다이렉션
     useEffect(() => {
-        localStorage.setItem("ACCESS_TOKEN", "aasdf");
+        //localStorage.setItem("ACCESS_TOKEN", "aasdf");
         if (getJwtFromLocalStorage() === null) {
             // 서버 사이드 렌더링에서 리다이렉션을 위해 res.writeHead() 등을 사용하여 리다이렉션 처리
             if (typeof window !== "undefined") {

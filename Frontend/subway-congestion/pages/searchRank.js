@@ -6,9 +6,11 @@ const LoginHistory = () => {
     // 예시 데이터
     const [searchRank, setSearchRank] = useState({data:[]})
     useEffect(()=>{
-        getSearchRank().then((res)=>{
-            setSearchRank(res)
-        })
+        alert("현재 데이터를 받아올 수 없습니다.")
+        // 통계 데이터를 받아오는 코드, 백엔드 서버 사용시 주석 해제 바람
+        // getSearchRank().then((res)=>{
+        //     setSearchRank(res)
+        // })
     },[])
 
     console.log(searchRank)

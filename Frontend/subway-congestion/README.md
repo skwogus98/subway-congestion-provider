@@ -4,7 +4,7 @@ backend server를 따로 배포하지 않아 로그인, 통계페이지를 이�
 
 실제 backend 서버를 사용한다면, index.js, searchRanck.js 파일의 useEffect를 수정해야합니다.
 
-https://subway-congestion-provider-f2d6zgnww-skwogus98.vercel.app/
+https://subway-congestion-provider-5leccvq1j-skwogus98.vercel.app/
 
 ## Getting Started
 

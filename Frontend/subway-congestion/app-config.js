@@ -7,6 +7,6 @@ let backendHost;
 //     backendHost = "http://localhost:8080";
 // }
 
-backendHost = "http://localhost:8080";
+backendHost = "https://subway-congestion-provider.vercel.app/";
 
 export const API_BASE_URL = `${backendHost}`;

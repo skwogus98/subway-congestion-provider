@@ -16,7 +16,7 @@ function callApi(addr) {
     let headers = new Headers({
         "Content-Type": "application/json",
     });
-    var url = "http://localhost:3000/api/route";
+    var url = "https://subway-congestion-provider.vercel.app/api/route";
     let options = {
         headers: headers,
         url: url,

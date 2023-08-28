@@ -2,7 +2,7 @@ export async function callApi(addr) {
     let headers = new Headers({
         "Content-Type": "application/json",
     });
-    var url = "http://localhost:3000/api/";
+    var url = "https://subway-congestion-provider.vercel.app/api/";
     let options = {
         headers: headers,
         url: url + addr,
